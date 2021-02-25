@@ -1,0 +1,18 @@
+version: "3.3"
+
+services:
+  nginx:
+   image: service:latest
+   hostname: service_mean
+   container_name: service_mean  
+   ports:
+   - "5000:5000"
+   volumes:
+   - ./:/usr/src/app
+   networks:
+   - database_backend
+
+
+networks:
+    database_backend:
+        external: true
