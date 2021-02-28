@@ -1,10 +1,9 @@
 const {Router} = require('express')
-const bcrypt = require("bcrypt")
 const {check, validationResult} = require("express-validator")
 const jwt = require("jsonwebtoken")
 const User = require("../models/User")
 const config = require("config")
-
+const bcrypt = require('bcrypt')
 
 const router = Router()
 
@@ -26,16 +25,22 @@ router.post(
             })
         }
 
+
         const {email, password} = req.body
 
+
         const candidate = await User.findOne({email})
+
+
+      
 
         if(candidate){
            return res.status(400).json({massage: "Такой пользователь уже существует!"})
         }
 
-        const hashedPassword = await bcrypt.hash(password, 632)
-
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
+ 
         const user = new User({email, password: hashedPassword})
 
         await user.save()
@@ -63,7 +68,6 @@ router.post(
                 massage: "Некорректные данные при входе в систему!"
             })
         }
-
         const {email, password} = req.body
 
         const user = await User.findOne({email})
@@ -88,6 +92,7 @@ router.post(
 
 
     } catch(e){
+        console.log(e)
         res.status(500).json({"massage": "Возникла ошибка на сервере"})
     }
 })

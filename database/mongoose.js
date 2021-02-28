@@ -56,3 +56,5 @@ process.on('SIGINT', function() {
 }) 
 
 }()
+
+require('../models/User')
